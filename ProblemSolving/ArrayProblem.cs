@@ -12,7 +12,7 @@ namespace CodingPractice
 
         public void Rotate(int[] nums, int k)
         {
-            
+
             var list = new List<int>();
             foreach (int i in nums)
             {
@@ -26,21 +26,21 @@ namespace CodingPractice
                 list.Insert(0, x);
             }
 
-            nums =  list.ToArray();
+            nums = list.ToArray();
         }
 
         public void RotateAnotherApproach(int[] nums, int k)
         {
             k = k % nums.Length;
-            Reverse(nums, 0, nums.Length-1 );
-            Reverse(nums, 0, k-1 );
-            Reverse(nums,k, nums.Length-1 );
+            Reverse(nums, 0, nums.Length - 1);
+            Reverse(nums, 0, k - 1);
+            Reverse(nums, k, nums.Length - 1);
 
         }
 
         void Reverse(int[] nums, int start, int end)
         {
-            while(start < end)
+            while (start < end)
             {
                 var temp = nums[start];
                 nums[start] = nums[end];
@@ -49,7 +49,6 @@ namespace CodingPractice
                 end--;
             }
 
-                
         }
 
         public int[] Intersect(int[] nums1, int[] nums2)
@@ -63,7 +62,7 @@ namespace CodingPractice
 
             foreach (int i in nums2)
             {
-                if(list.Contains(i))
+                if (list.Contains(i))
                 {
                     list2.Add(i);
                     list.Remove(i);
@@ -79,14 +78,14 @@ namespace CodingPractice
 
         public void MoveZeroes(int[] nums)
         {
-            if(nums.Length ==1)
+            if (nums.Length == 1)
             {
                 return;
             }
 
             var list = nums.ToList();
 
-            for(int i= 0; i<nums.Length-1;i++)
+            for (int i = 0; i < nums.Length - 1; i++)
             {
                 if (nums[i] == 0)
                 {
@@ -96,7 +95,7 @@ namespace CodingPractice
                 }
             }
 
-            nums = list.ToArray();  
+            nums = list.ToArray();
 
         }
 
@@ -116,12 +115,103 @@ namespace CodingPractice
                 {
                     dict[nums[i]] = i;
                 }
-               
             }
 
             // if no solution found
             return new int[0];
 
+        }
+
+        public int[] DistributeShirtsEvenly(int totalShirts, int numBags)
+        {
+            int[] bags = new int[numBags];
+            int shirtsPerBag = totalShirts / numBags;
+            int remainder = totalShirts % numBags;
+
+            for (int i = 0; i < numBags; i++)
+            {
+                bags[i] = shirtsPerBag;
+                if (remainder > 0)
+                {
+                    bags[i]++;
+                    remainder--;
+                }
+            }
+
+            return bags;
+        }
+
+        public int[] DistributeShirtsEvenl(int numShirts, int numBags)
+        {
+            int[] bags = new int[numBags];
+            int shirtsPerBag = 0;
+            int remainingShirts = numShirts % numBags;
+            int x = (numShirts + remainingShirts) / numBags;
+            int diff1 = x - (numShirts - (x * (numBags - 1)));
+
+            if (diff1 >= 0)
+            {
+
+            }
+
+            if (remainingShirts > numBags / 2)
+            {
+
+                shirtsPerBag = (numShirts - remainingShirts) / numBags;
+                remainingShirts += (numShirts - remainingShirts) - ((numBags - 1) * shirtsPerBag);
+                bags[0] = remainingShirts;
+                for (int i = 1; i < numBags; i++)
+                {
+                    bags[i] = shirtsPerBag;
+                }
+
+            }
+            else
+            {
+                shirtsPerBag = numShirts / numBags;
+                bags[0] = shirtsPerBag + remainingShirts;
+                for (int i = 1; i < numBags; i++)
+                {
+                    bags[i] = shirtsPerBag;
+                }
+
+            }
+
+            foreach (int i in bags)
+                Console.WriteLine(i);
+
+            return bags;
+        }
+
+        public int[] DistributeShirtsEven(int numShirts, int numBags)
+        {
+            int[] bags = new int[numBags];
+            int remainingShirts = numShirts % numBags;
+            int numPerbag = numShirts / numBags;
+            numPerbag++;
+            if (remainingShirts < 5 || numPerbag * (numBags - 1) >= numShirts)
+            {
+                numPerbag--;
+                var remaining = numShirts - numPerbag * (numBags - 1);
+                bags[0] = remaining;
+                for (int i = 1; i < numBags; i++)
+                {
+                    bags[i] = numPerbag;
+                }
+
+            }
+            else
+            {
+
+                bags[0] = remainingShirts;
+                for (int i = 1; i < numBags; i++)
+                {
+                    bags[i] = numPerbag;
+                }
+
+            }
+
+            return bags;
         }
         public int RemoveDuplicates(int[] nums)
         {
@@ -147,7 +237,7 @@ namespace CodingPractice
 
         }
 
-        
+
         public bool ContainsDuplicate(int[] nums)
         {
             var dict = new Dictionary<int, int>();
@@ -207,19 +297,19 @@ namespace CodingPractice
         // need to understand 
         public void Rotate(int[][] matrix)
         {
-            int length = matrix.Length -1;
+            int length = matrix.Length - 1;
 
-            for(int i = 0; i< (length + 1)/2; i++) 
+            for (int i = 0; i < (length + 1) / 2; i++)
             {
-                for (int j = 0; j < (length+1)/2; j++)
+                for (int j = 0; j < (length + 1) / 2; j++)
                 {
                     // bottom left = bottom right
                     var temp = matrix[length - j][i];
                     //bottom left = bottom right
-                    matrix[length - j][i] = matrix[length - i][length- j];
+                    matrix[length - j][i] = matrix[length - i][length - j];
 
                     // bottom right = top right
-                    matrix[length - i][length-j] = matrix[j][length-i];
+                    matrix[length - i][length - j] = matrix[j][length - i];
 
                     matrix[j][length - i] = matrix[i][j];
 

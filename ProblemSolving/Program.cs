@@ -246,6 +246,7 @@ var binarySearch = new BinarySearch();
 int[] nums1 = { 2, 3, 5, 9, 14, 16, 18 };
 binarySearch.SearchInsertCeil(nums1, 7);
 binarySearch.SearchInsertFloor(nums1, 1);
+binarySearch.ans(nums1, 9);
 
 
 Console.ReadLine();
