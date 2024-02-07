@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CodingPractice
 {
@@ -17,18 +18,18 @@ namespace CodingPractice
             }
             int start = 0;
             int end = nums.Length - 1;
-            
 
-            while(start <= end)
+
+            while (start <= end)
             {
                 int mid = (start + end) / 2;
                 if (target < nums[mid])
                 {
-                    end= mid-1;
+                    end = mid - 1;
                 }
-                else if (target > nums[mid]) 
+                else if (target > nums[mid])
                 {
-                    start= mid+1;
+                    start = mid + 1;
                 }
                 else
                 {
@@ -100,7 +101,7 @@ namespace CodingPractice
                 }
                 else
                 {
-                    ans= mid;
+                    ans = mid;
                     if (findStartIndex)
                     {
                         end = mid - 1;
@@ -150,7 +151,7 @@ namespace CodingPractice
             int start = 0;
             int end = 1;
             int n = 2;
-            while(target > nums[end])
+            while (target > nums[end])
             {
                 n = n * 2;
                 int temp = end + 1;
@@ -165,8 +166,8 @@ namespace CodingPractice
 
         public int BinarySearchInfiniteArray(int[] nums, int target, int start, int end)
         {
-          
-          
+
+
             while (start <= end)
             {
                 int mid = (start + end) / 2;
@@ -185,9 +186,258 @@ namespace CodingPractice
                 }
             }
 
-            
+
 
             return end;
         }
+
+
+        public int PeakIndexInMountainArray(int[] arr)
+        {
+            int start = 0;
+            int end = arr.Length - 1;
+
+            while (start < end)
+            {
+                int mid = (start + end) / 2;
+                if (arr[mid] < arr[mid + 1])
+                {
+                    start = mid + 1;
+                }
+                else
+                {
+                    end = mid;
+                }
+
+            }
+            return start;
+        }
+
+        public int FindPeakElement(int[] nums)
+        {
+            int start = 0;
+            int end = nums.Length - 1;
+            while (start < end)
+            {
+                //int mid = start + end / 2;
+                int mid = start + (end - start) / 2;
+
+                if (nums[mid] < nums[mid + 1])
+                {
+                    start = mid + 1;
+                }
+                else { end = mid; }
+
+            }
+
+            return start;
+        }
+
+        public int FindInMountainArray(int target, int[] nums)
+        {
+            int peakIndex = PeakIndexInMountainArray(nums);
+            int firstTry = OrderAgnosticBS(nums, target, 0, peakIndex);
+            if (firstTry != -1)
+                return firstTry;
+            return OrderAgnosticBS(nums, target, peakIndex + 1, nums.Length - 1);
+
+        }
+
+        public int OrderAgnosticBS(int[] arr, int target, int start, int end)
+        {
+            // find whether the array is sorted in ascending or descending
+            bool isAsc = arr[start] < arr[end];
+
+            while (start <= end)
+            {
+                // find the middle element
+                //            int mid = (start + end) / 2; // might be possible that (start + end) exceeds the range of int in java
+                int mid = start + (end - start) / 2;
+
+                if (arr[mid] == target)
+                {
+                    return mid;
+                }
+
+                if (isAsc)
+                {
+                    if (target < arr[mid])
+                    {
+                        end = mid - 1;
+                    }
+                    else
+                    {
+                        start = mid + 1;
+                    }
+                }
+                else
+                {
+                    if (target > arr[mid])
+                    {
+                        end = mid - 1;
+                    }
+                    else
+                    {
+                        start = mid + 1;
+                    }
+                }
+            }
+            return -1;
+        }
+
+        public int RotatedSearch(int[] nums, int target)
+        {
+            int pivot = FindPivot(nums);
+            if(pivot == -1)
+            {
+                return binarySearch(nums, target,0,nums.Length-1);
+            }
+
+            if (nums[pivot] == target)
+                return pivot;
+            if(target >= nums[0])
+                return binarySearch(nums,target,0,pivot-1);
+               
+            return binarySearch(nums,target,pivot+1,nums.Length-1); 
+
+        }
+
+        public int FindPivot(int[] nums)
+        {
+            int start = 0;
+            int end = nums.Length - 1;
+
+            while (start <= end)
+            {
+                int mid = start + (end - start) / 2;
+                if (mid < end && nums[mid] > nums[mid + 1])
+                    return mid;
+                else if (mid > start && nums[mid] < nums[mid - 1])
+                    return mid - 1;
+                else if (nums[mid] <= nums[start])
+                    end = mid - 1;
+                else
+                    start = mid + 1;
+
+            }
+
+            return -1;
+        }
+
+        public int FindPivotWithDuplicate(int[] nums)
+        {
+            int start = 0;
+            int end = nums.Length - 1;
+
+            while (start <= end)
+            {
+                int mid = start + (end - start) / 2;
+                if (mid < end && nums[mid] > nums[mid + 1])
+                    return mid;
+                else if (mid > start && nums[mid] < nums[mid - 1])
+                    return mid - 1;
+                // if elements at middle, start, end are equal then just skip the duplicates
+                if (nums[mid] == nums[start] && nums[mid] == nums[end])
+                {
+                    // skip the duplicates
+                    // NOTE: what if these elements at start and end were the pivot??
+                    // check if start is pivot
+                    if (start < end && nums[start] > nums[start + 1])
+                    {
+                        return start;
+                    }
+                    start++;
+
+                    // check whether end is pivot
+                    if (end > start && nums[end] < nums[end - 1])
+                    {
+                        return end - 1;
+                    }
+                    end--;
+                }
+                // left side is sorted, so pivot should be in right
+                else if (nums[start] < nums[mid] || (nums[start] == nums[mid] && nums[mid] > nums[end]))
+                {
+                    start = mid + 1;
+                }
+                else
+                {
+                    end = mid - 1;
+                }
+            }
+
+            return -1;
+        }
+
+        public int binarySearch(int[] nums, int target, int start, int end)
+        {
+            while (start <= end)
+            {
+                int mid = start + (end - start) / 2;
+
+                if (target > nums[mid])
+                    start = mid + 1;
+                else if (target < nums[mid])
+                    end = mid - 1;
+                else
+                    return mid;
+
+            }
+            return -1;
+
+        }
+
+
+        public int SplitArray(int[] nums, int k)
+        {
+            int start = 0;
+            int end = 0;
+
+            for (int i = 0; i < nums.Length; i++)
+            {
+                start = Math.Max(start, nums[i]); // in the end of the loop this will contain the max item of the array
+                end += nums[i];
+            }
+
+            // binary search
+            while (start < end)
+            {
+                // try for the middle as potential ans
+                int mid = start + (end - start) / 2;
+
+                // calculate how many pieces you can divide this in with this max sum
+                int sum = 0;
+                int pieces = 1;
+                foreach (var num in nums)
+                {
+                    if (sum + num > mid)
+                    {
+                        // you cannot add this in this subarray, make new one
+                        // say you add this num in new subarray, then sum = num
+                        sum = num;
+                        pieces++;
+                    }
+                    else
+                    {
+                        sum += num;
+                    }
+                }
+
+                if (pieces > k)
+                {
+                    start = mid + 1;
+                }
+                else
+                {
+                    end = mid;
+                }
+
+            }
+            return end; 
+        }
+
+
     }
+
+
 }

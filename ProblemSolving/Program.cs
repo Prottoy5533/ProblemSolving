@@ -227,10 +227,10 @@ arrayProblem.Intersect(num1, num2);
 
 int[] nums = { 3, 2, 4 };
 arrayProblem.TwoSum(nums, 6);
-int[] arr = { 0, 0, 1, 1, 1, 2, 2, 3, 3, 4 };
+int[] nums = { 0, 0, 1, 1, 1, 2, 2, 3, 3, 4 };
 
 var array = new ArrayProblem();
-array.RemoveDuplicates(arr);
+array.RemoveDuplicates(nums);
 
 int[] plusOne = { 0 };
 array.PlusOne(plusOne);
